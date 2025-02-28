@@ -14,10 +14,7 @@
   "tekniikat": [
     { "0": [{ "aihe": "low-code" }, { "linkki": "https://www.weebly.com/" }] },
     {
-      "1": [
-        { "aihe": "wordpress" },
-        { "linkki": "https://https://wordpress.com/" }
-      ]
+      "1": [{ "aihe": "wordpress" }, { "linkki": "https://wordpress.com/" }]
     },
     {
       "2": [{ "aihe": "bootstrap" }, { "linkki": "https://getbootstrap.com/" }]

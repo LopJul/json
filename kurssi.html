@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html lang="fi">
+  <head>
+    <title>JSON Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <div id="vastaus"></div>
+    <script>
+      function kerro(data) {
+        var teksti = "";
+
+        // Otsikko ja kuvaus
+        teksti = "<h1>" + data.otsikko + "</h1>";
+        teksti = teksti + "<p>" + data.kuvaus + "</p>";
+
+        // Kuva
+        if (data.kuva) {
+          teksti = teksti + "<img src='" + data.kuva + "' alt='Kuva' />";
+        }
+
+        // Opintojakson tiedot
+        if (data.opintojakso) {
+          teksti += "<h2>Opintojakso:</h2><ul>";
+          data.opintojakso.forEach(function (jakso) {
+            teksti +=
+              "<li>" +
+              jakso.nimi +
+              " (" +
+              jakso.tunnus +
+              ") - " +
+              jakso.opintopisteet +
+              " op</li>";
+          });
+          teksti += "</ul>";
+        }
+
+        // Opintojakso sisalto
+        if (data.sisalto) {
+          teksti += "<h3>Sisältö:</h3><ul>";
+          data.sisalto.forEach(function (sisalto) {
+            teksti += "<li>" + Object.values(sisalto)[0] + "</li>";
+          });
+          teksti += "</ul>";
+        }
+
+        // Opintojakson tekniikat
+        if (data.tekniikat) {
+          teksti += "<h3>Tekniikat:</h3><ul>";
+          data.tekniikat.forEach(function (tekniikka) {
+            Object.values(tekniikka).forEach(function (osa) {
+              teksti +=
+                "<li><a href='" +
+                osa[1].linkki +
+                "'>" +
+                osa[0].aihe +
+                "</a></li>";
+            });
+          });
+          teksti += "</ul>";
+        }
+
+        document.getElementById("vastaus").innerHTML = teksti;
+      }
+      fetch("https://lopjul.github.io/json/json-data.json")
+        .then(function (response) {
+          return response.json();
+        })
+
+        .then(function (responseJson) {
+          kerro(responseJson);
+        })
+        .catch(function (error) {
+          document.getElementById("vastaus").innerHTML =
+            "<p>Tietoa ei pystytä hakemaan</p>";
+        });
+    </script>
+  </body>
+</html>
