@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="fi">
+  <head>
+    <title>JSON Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <div id="vastaus"></div>
+    <script>
+      function kerro(data) {
+        var teksti = "";
+
+        //Toteutuksen nimi
+        teksti = "<h1>" + data.otsikko + "</h1>";
+
+        //Osallistujat ja nimitiedot
+        teksti += "<h3>Osallistujat:</h3>";
+        teksti += data.osallistujat;
+
+        if (data.nimitiedot) {
+          teksti += "<h3>Osallistujien nimet:</h3><ul>";
+          data.nimitiedot.forEach(function (osallistuja) {
+            teksti += "<li>" + Object.values(osallistuja)[0] + "</li>";
+          });
+          teksti += "</ul>";
+        }
+
+        //Ajankohta
+
+        teksti += "<h3>Ajankohta:</h3>" + data.ajankohta;
+
+        //Kesto
+
+        teksti += "<h3>Kesto:</h3>";
+        teksti += "<p>" + data.kesto + "</p>";
+
+        //Kuva
+
+        if (data.kuva) {
+          teksti = teksti + "<img src='" + data.kuva + "' alt='Kuva' />";
+        }
+
+        document.getElementById("vastaus").innerHTML = teksti;
+      }
+      fetch("https://lopjul.github.io/json/digitekniikat.json")
+        .then(function (response) {
+          return response.json();
+        })
+
+        .then(function (responseJson) {
+          kerro(responseJson);
+        })
+        .catch(function (error) {
+          document.getElementById("vastaus").innerHTML =
+            "<p>Tietoa ei pystytä hakemaan</p>";
+        });
+    </script>
+  </body>
+</html>
