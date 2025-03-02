@@ -105,7 +105,10 @@
               haeKamera(responseJson, responseJsonDates);
             });
         })
-        .catch((error) => console.log("error: ", error));
+        .catch(function (error) {
+          document.getElementById("vastaus").innerHTML =
+            "<p>Tietoa ei pystytä hakemaan </p>" + error;
+        });
     </script>
   </body>
 </html>
