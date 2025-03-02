@@ -2,7 +2,7 @@
 
 <html lang="fi">
   <head>
-    <title>Kurssi</title>
+    <title>Tampereen tapahtumat</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Bootstrap CSS -->
@@ -56,6 +56,7 @@
     </header>
 
     <div class="container my-4">
+      <h1>Tampereella tapahtuu</h1>
       <div id="vastaus"></div>
     </div>
 
@@ -65,75 +66,38 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>
     <script>
-      function kerro(data) {
+      function tapahtumat(data) {
         var teksti = "";
 
-        // Otsikko ja kuvaus
-        teksti = "<h1>" + data.otsikko + "</h1>";
-        teksti = teksti + "<p>" + data.kuvaus + "</p>";
+        // Tapahtumien läpikäyminen
+        for (var i = 0; i < data.length; i++) {
+          teksti += "<div class='my-5'>";
+          // Otsikko
+          teksti += "<h3>" + data[i].title + "</h3>";
 
-        // Kuva
-        if (data.kuva) {
-          teksti =
-            teksti + "<img class='w-100' src='" + data.kuva + "' alt='Kuva' />";
+          // Kuvaus
+          teksti += "<p>" + data[i].description + "</p>";
+
+          // Linkki
+          teksti += "<a href=" + data[i].url + ">" + data[i].url + "</a>";
+
+          teksti += "</div>";
         }
-
-        // Opintojakson tiedot
-        if (data.opintojakso) {
-          teksti += "<h2 class='mt-4'>Opintojakso:</h2><ul>";
-          data.opintojakso.forEach(function (jakso) {
-            teksti +=
-              "<li>" +
-              jakso.nimi +
-              " (" +
-              jakso.tunnus +
-              ") - " +
-              jakso.opintopisteet +
-              " op</li>";
-          });
-          teksti += "</ul>";
-        }
-
-        // Opintojakso sisalto
-        if (data.sisalto) {
-          teksti += "<h3 class='mt-4'>Sisältö:</h3>";
-          teksti += "<ul>";
-          data.sisalto.forEach(function (sisalto) {
-            teksti += "<li>" + Object.values(sisalto)[0] + "</li>";
-          });
-          teksti += "</ul>";
-        }
-
-        // Opintojakson tekniikat
-        if (data.tekniikat) {
-          teksti += "<h3 class='mt-4'>Tekniikat:</h3><ul>";
-          data.tekniikat.forEach(function (tekniikka) {
-            Object.values(tekniikka).forEach(function (osa) {
-              teksti +=
-                "<li><a href='" +
-                osa[1].linkki +
-                "'>" +
-                osa[0].aihe +
-                "</a></li>";
-            });
-          });
-          teksti += "</ul>";
-        }
-
         document.getElementById("vastaus").innerHTML = teksti;
       }
 
-      fetch("https://lopjul.github.io/json/json-data.json")
+      fetch(
+        "https://api.visittampere.com/api/v1/visittampere/event/published/all/?format=json&lang=fi"
+      )
         .then(function (response) {
           return response.json();
         })
-
         .then(function (responseJson) {
-          kerro(responseJson);
+          tapahtumat(responseJson);
         })
         .catch(function (error) {
           document.getElementById("vastaus").innerHTML =
-            "<p>Tietoa ei pystytä hakemaan</p>";
+            "<p>Tietoa ei pystytä hakemaan </p>" + error;
         });
     </script>
   </body>
